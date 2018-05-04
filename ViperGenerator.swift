@@ -52,6 +52,8 @@ struct FilesGenerator {
         
         try contractFile.write(string: """
             
+            import UIKit
+            
             protocol \(moduleName)WireframeProtocol : class {
                 static func start() -> UIViewController
             }
@@ -65,9 +67,7 @@ struct FilesGenerator {
                 var wireframe : \(moduleName)WireframeProtocol? { get set }
                 var interactor : \(moduleName)InteractorInputProtocol? { get set }
             
-                func viewDidLoad() {
-            
-                }
+                //func viewDidLoad()
             }
             
             protocol \(moduleName)InteractorInputProtocol : class {
@@ -101,7 +101,7 @@ struct FilesGenerator {
                     let presenter : \(moduleName)PresenterProtocol & \(moduleName)InteractorOutputProtocol = \(moduleName)Presenter()
                     let interactor : \(moduleName)InteractorInputProtocol & \(moduleName)DataManagerOutputProtocol = \(moduleName)Interactor()
                     let dataManager : \(moduleName)DataManagerInputProtocol = \(moduleName)DataManager()
-                    let wireframe : \(moduleName)WireframeProtocol = \(moduleName)Wireframe
+                    let wireframe : \(moduleName)WireframeProtocol = \(moduleName)Wireframe()
             
                     vc.presenter = presenter
             
@@ -151,7 +151,7 @@ struct FilesGenerator {
             class \(moduleName)Presenter : \(moduleName)PresenterProtocol {
             
                 weak var view : \(moduleName)ViewProtocol?
-                var interactor : \(moduleName)InputProtocol?
+                var interactor : \(moduleName)InteractorInputProtocol?
                 var wireframe : \(moduleName)WireframeProtocol?
             
                 /*func viewDidLoad() {

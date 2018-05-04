@@ -17,4 +17,4 @@ $ marathon add https://github.com/JohnSundell/Files.git
 
 ```sh
 $ marathon run https://github.com/pescadjiam/marathon-viper-generator.git "Module name"
-```
+``
