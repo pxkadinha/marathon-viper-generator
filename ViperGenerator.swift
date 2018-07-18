@@ -147,6 +147,10 @@ struct FilesGenerator {
                 var dataManager : \(moduleName)DataManagerInputProtocol? { get set }
             }
             
+            protocol \(moduleName)InteractorOutputProtocol : class {
+            
+            }
+            
             class \(moduleName)Interactor : \(moduleName)InteractorInputProtocol {
             
                 var presenter : \(moduleName)InteractorOutputProtocol?
