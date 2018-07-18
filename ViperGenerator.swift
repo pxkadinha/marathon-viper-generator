@@ -5,8 +5,8 @@ var moduleName : String?
 
 struct FilesGenerator {
     
-    let viewName, presenterName, wireframeName, interactorName, dataManagerName, contractName: String
-    let viewFile, presenterFile, wireframeFile, interactorFile, dataManagerFile, contractFile : File
+    let viewName, presenterName, wireframeName, interactorName, dataManagerName: String
+    let viewFile, presenterFile, wireframeFile, interactorFile, dataManagerFile : File
     
     let folder: Folder
     
@@ -18,7 +18,6 @@ struct FilesGenerator {
         wireframeName = moduleName + "Wireframe"
         interactorName = moduleName + "Interactor"
         dataManagerName = moduleName + "DataManager"
-        contractName = moduleName + "Contract"
         
         folder = try FileSystem().currentFolder.createSubfolder(named: moduleName)
         
@@ -26,7 +25,6 @@ struct FilesGenerator {
         presenterFile = try folder.createSubfolder(named: "Presenter").createFile(named: presenterName + ".swift")
         interactorFile = try folder.createSubfolder(named: "Interactor").createFile(named: interactorName + ".swift")
         wireframeFile = try folder.createSubfolder(named: "Wireframe").createFile(named: wireframeName + ".swift")
-        contractFile = try folder.createFile(named: contractName + ".swift")
         
         let dataManagerFolder = try folder.createSubfolder(named: "DataManager")
         dataManagerFile = try dataManagerFolder.createSubfolder(named: "Remote").createFile(named: dataManagerName + ".swift")
@@ -48,51 +46,15 @@ struct FilesGenerator {
     }
     
     
-    private func createContract(moduleName : String) throws {
-        
-        try contractFile.write(string: """
-            
-            import UIKit
-            
-            protocol \(moduleName)WireframeProtocol : class {
-                static func start() -> UIViewController
-            }
-            
-            protocol \(moduleName)ViewProtocol : class {
-                var presenter : \(moduleName)PresenterProtocol? { get set }
-            }
-            
-            protocol \(moduleName)PresenterProtocol : class {
-                var view : \(moduleName)ViewProtocol? { get set }
-                var wireframe : \(moduleName)WireframeProtocol? { get set }
-                var interactor : \(moduleName)InteractorInputProtocol? { get set }
-            
-                //func viewDidLoad()
-            }
-            
-            protocol \(moduleName)InteractorInputProtocol : class {
-                var presenter : \(moduleName)InteractorOutputProtocol? { get set }
-                var dataManager : \(moduleName)DataManagerInputProtocol? { get set }
-            }
-            
-            protocol \(moduleName)InteractorOutputProtocol : class {
-            
-            }
-            
-            protocol \(moduleName)DataManagerInputProtocol : class {
-                var requestHandler : \(moduleName)DataManagerOutputProtocol? { get set }
-            }
-            
-            protocol \(moduleName)DataManagerOutputProtocol : class {
-            
-            }
-            """)
-    }
     
     private func createWireframe(moduleName : String) throws {
         
         try wireframeFile.write(string: """
             import UIKit
+            
+            protocol \(moduleName)WireframeProtocol : class {
+                static func start() -> UIViewController
+            }
             
             class \(moduleName)Wireframe : \(moduleName)WireframeProtocol {
                 class func start() -> UIViewController {
@@ -126,6 +88,10 @@ struct FilesGenerator {
         try viewFile.write(string: """
             import UIKit
             
+            protocol \(moduleName)ViewProtocol : class {
+                var presenter : \(moduleName)PresenterProtocol? { get set }
+            }
+            
             class \(moduleName)ViewController : UIViewController {
             
                 var presenter : \(moduleName)PresenterProtocol?
@@ -148,6 +114,14 @@ struct FilesGenerator {
         
         try presenterFile.write(string: """
             
+            protocol \(moduleName)PresenterProtocol : class {
+                var view : \(moduleName)ViewProtocol? { get set }
+                var wireframe : \(moduleName)WireframeProtocol? { get set }
+                var interactor : \(moduleName)InteractorInputProtocol? { get set }
+            
+                //func viewDidLoad()
+            }
+            
             class \(moduleName)Presenter : \(moduleName)PresenterProtocol {
             
                 weak var view : \(moduleName)ViewProtocol?
@@ -168,6 +142,12 @@ struct FilesGenerator {
     private func createInteractor(moduleName : String) throws {
         
         try interactorFile.write(string: """
+            
+            protocol \(moduleName)InteractorInputProtocol : class {
+                var presenter : \(moduleName)InteractorOutputProtocol? { get set }
+                var dataManager : \(moduleName)DataManagerInputProtocol? { get set }
+            }
+            
             class \(moduleName)Interactor : \(moduleName)InteractorInputProtocol {
             
                 var presenter : \(moduleName)InteractorOutputProtocol?
@@ -184,6 +164,15 @@ struct FilesGenerator {
     
     private func createDataManager(moduleName : String) throws {
         try dataManagerFile.write(string: """
+            
+            protocol \(moduleName)DataManagerInputProtocol : class {
+                var requestHandler : \(moduleName)DataManagerOutputProtocol? { get set }
+            }
+            
+            protocol \(moduleName)DataManagerOutputProtocol : class {
+            
+            }
+            
             class \(moduleName)DataManager : \(moduleName)DataManagerInputProtocol {
             
                 var requestHandler : \(moduleName)DataManagerOutputProtocol?
