@@ -37,7 +37,6 @@ struct FilesGenerator {
         
         guard let moduleName = moduleName else { return }
         
-        try createContract(moduleName: moduleName)
         try createWireframe(moduleName: moduleName)
         try createView(moduleName: moduleName)
         try createPresenter(moduleName: moduleName)
